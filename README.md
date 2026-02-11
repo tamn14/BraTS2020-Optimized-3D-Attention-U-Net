@@ -29,17 +29,22 @@ We introduce three strategic modifications to the standard architecture:
 
 The core innovation lies in our handling of the **AttentionBlock**. This block filters skip-connection features, allowing the decoder to focus on task-relevant information.
 
-### The Problem: Cold-Start
+### The Problem: Suboptimal Gradient Flow
 
-Standard attention gates often suffer from a "cold-start" problem where encoder features are prematurely suppressed early in training due to low initial sigmoid activations.
+In standard **Attention Gates (AGs)**, zero-bias initialization often leads to low initial sigmoid activations. This can cause:
+
+- **Feature Suppression:** Important encoder features are prematurely attenuated before the model learns to identify relevant spatial regions.
+- **Convergence Instability:** The initial "closed-gate" state restricts the flow of gradients, making it difficult for the model to exit local minima in early epochs, particularly in high-variance regions like the Tumor Core.
+
+---
 
 ### The Solution: Weighted Bias Initialization
 
-To improve early training stability, we apply **Weighted Bias Initialization** in the `InstanceNorm` layer of the attention transformation:
+To ensure more stable convergence dynamics, we shift the initial state toward a more **permissive configuration**:
 
-- **Configuration:** We set the affine bias **$\beta = 2.0$** (default is 0).
-- **Effect:** This shifts the sigmoid output to an initially high attention value (~0.88), keeping the gate in a "near-open" state at the start.
-- **Benefit:** This allows stronger error signals to backpropagate to earlier layers immediately, mitigating the vanishing gradient problem in the attention mechanism.
+- **Mechanism:** By setting the affine bias $\beta \in [1.5, 2.0]$, the initial gate activation is shifted to $\alpha \approx 0.82 \text{--} 0.88$.
+- **Result:** This "near-open" state ensures that encoder features pass through almost freely during the initial phase.
+- **Optimization:** Instead of struggling to "open" the gate, the model focuses on refining the attention map, leading to a much smoother loss trajectory and sustained performance gains in later epochs.
 
 ---
 
