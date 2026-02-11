@@ -112,23 +112,23 @@ Available Models
 ### 4.3 Train
 
 ```bash
-python train.py --model_name optimized_unet3d
+python main.py --model_name optimized_unet3d
 ```
 
 ```bash
-python train.py --model_name attention_unet3d
+python main.py --model_name attention_unet3d
 ```
 
 Specify epochs and k-fold:
 
 ```bash
-python train.py --model_name optimized_unet3d --epochs 100 --kfold 5
+python main.py --model_name optimized_unet3d --epochs 100 --kfold 5
 ```
 
 ### Inference Only
 
 ```bash
-python train.py --model_name optimized_unet3d --skip_train
+python main.py --model_name optimized_unet3d --skip_train
 ```
 
 ### Arguments
