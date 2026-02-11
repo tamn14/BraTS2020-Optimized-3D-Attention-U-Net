@@ -77,18 +77,29 @@ Representative slices from validation folds showcasing the segmentation quality.
 
 ## ⚙️ 4. Installation & Setup
 
-### 1. Dependencies
+## ⚙️ 4. Installation & Setup
 
-Ensure you have the required libraries installed.
+Follow these steps to configure your environment and prepare the dataset for experiments.
+
+### 4.1. Prerequisites & Dependencies
+
+This project requires **Python 3.8+**. It is recommended to use a virtual environment (Conda or venv). Install the core libraries using the command below:
 
 ```bash
 pip install --upgrade monai[all] torch nibabel numpy pandas matplotlib seaborn scikit-learn tqdm
-2. Dataset SetupDownload: Get the BraTS 2020 dataset from Kaggle:👉 Download HereConfigure: Update the path in config/config.py.Open config/config.py and modify DATA_PATH:Python# Old Path
-DATA_PATH = Path("/root/Seg/MICCAI_BraTS2020_TrainingData")
 
-# New Path (Example)
-DATA_PATH = Path("/your/local/path/MICCAI_BraTS2020_TrainingData")
-🏃‍♂️ 5. UsageThe training script supports various configurations via command-line arguments.Available Modelsoptimized_unet3d: The proposed model with stability improvements.attention_unet3d: The baseline attention U-Net model.Training CommandRun the training loop with cross-validation: train.py --model_name optimized_unet3d --epochs 100 --kfold 5
-Inference OnlySkip the training phase and run inference using pre-trained weights: train.py --model_name optimized_unet3d --skip_train
-Arguments ReferenceArgumentDescription--model_nameArchitecture to use (optimized_unet3d or attention_unet3d)--epochsNumber of training epochs--kfoldNumber of cross-validation folds--skip_trainFlag to skip training and run inference only
+
+PyTorch: Deep learning framework.MONAI: Specialized framework for healthcare imaging (3D transforms, DiceLoss, and U-Net layers).Nibabel: For processing medical imaging formats (.nii.gz).4.2. Dataset PreparationThe model is evaluated on the BraTS 2020 (Brain Tumor Segmentation) dataset.Download: Access the dataset on Kaggle:👉 BraTS 2020 Training DataStructure: After extraction, ensure your data directory is organized as follows:PlaintextMICCAI_BraTS2020_TrainingData/
+├── BraTS20_Training_001/
+│   ├── BraTS20_Training_001_flair.nii.gz
+│   ├── BraTS20_Training_001_t1ce.nii.gz
+│   └── ...
+└── ...
+4.3. ConfigurationUpdate the absolute path to your dataset in the configuration file to enable the data loader.File: config/config.pyVariable: DATA_PATHPythonfrom pathlib import Path
+
+# Update this path to match your local dataset directory
+DATA_PATH = Path("/your/local/path/to/MICCAI_BraTS2020_TrainingData")
+🏃‍♂️ 5. Usage GuideThe train.py script serves as the main entry point for both training and evaluation phases.5.1. Model SelectionYou can toggle between the baseline and our optimized architecture:optimized_unet3d: Our proposed model featuring Bias-Shifted Attention, InstanceNorm, and LeakyReLU.attention_unet3d: The standard 3D Attention U-Net baseline.5.2. Running ExperimentsFull Training & Validation: Execute a 5-fold cross-validation run:Bashpython train.py --model_name optimized_unet3d --epochs 100 --kfold 5
+Inference Only: Skip the training process and run evaluation using existing weights:Bashpython train.py --model_name optimized_unet3d --skip_train
+5.3. Arguments ReferenceArgumentTypeDefaultDescription--model_namestroptimized_unet3dChoose between optimized_unet3d or attention_unet3d.--epochsint100Number of training iterations.--kfoldint5Number of folds for cross-validation.--skip_trainflagFalseSkips training and runs inference on the validation set.
 ```
