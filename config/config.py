@@ -38,7 +38,7 @@ OUT_CHANNELS_3D = 4                    # Number of output channels for 3D U-Net
 FEATURES = (16, 32, 64, 128, 256)      # Feature map sizes for each layer in U-Net
 
 FINE_EPOCHS = 100                      # Number of epochs for fine-tuning
-WARMUP_EPOCHS = 2                      # Number of warm-up epochs
+WARMUP_EPOCHS = 10                    # Number of warm-up epochs
 OPT_LR = 3e-4                         # Learning rate for fine-tuning
 FINE_BATCH_SIZE = 1                    # Batch size for fine-tuning
 ACCUMULATION_STEPS = 4                 # Gradient accumulation steps
